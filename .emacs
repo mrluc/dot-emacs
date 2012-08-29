@@ -3,6 +3,9 @@
  'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (package-initialize)
 
+;; Check if system is Darwin/Mac OS X
+(defun is-mac () (interactive) "Are we on Darwin?" (string-equal system-type "darwin"))
+
 ;;;; VISUAL APPEARANCE
 ;;   TODO the backgrounds are 256-color CONSOLE specific
 (set 'tab-width 2)
@@ -12,9 +15,10 @@
 
 (load-theme 'wombat)
 (set-face-background 'highlight "gray13") ;; 256-color
-(set-face-background 'default "gray8")    ;; wombat
-(set-default-font "Liberation Mono 9")    ;; on ubuntu
-(set-face-attribute 'default nil :height 85) ;; 1/10th of a pt apiece
+(set-face-background 'default (if (is-mac) "gray10" "gray8"))    ;; wombat
+(set-default-font "Liberation Mono 9")    
+(set-face-attribute 'default nil :height (if (is-mac) 100 85)) ;; 1/10th of a pt apiece
+
 
 ;;; WINDOW MANAGEMENT and NAV
 ;;;
@@ -29,7 +33,7 @@
    ( "M-s M-<right> " enlarge-window-horizontally)
    ( "M-s M-<down>  " shrink-window)
    ( "M-s M-<up>    " enlarge-window)
-   ( "<f11>         " toggle-fullscreen)    ; (just use ns-... on mac)
+   ( "<f11>         " (if (is-mac) ns-toggle-fullscreen toggle-fullscreen))
    ( "C-c C-<left>  " windmove-left)        ; jump cursor from pane to pane
    ( "C-c C-<right> " windmove-right)       ;  in a natural fashion
    ( "C-c C-<up>    " windmove-up)
