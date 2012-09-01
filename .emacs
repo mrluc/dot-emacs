@@ -6,21 +6,8 @@
 ;; Check if system is Darwin/Mac OS X
 (defun is-mac () (interactive) "Are we on Darwin?" (string-equal system-type "darwin"))
 
-(defun set-exec-path-from-shell-PATH ()
-  "Set up Emacs' `exec-path' and PATH environment variable to match that used by the user's shell."
-  (interactive)
-  (let ((path-from-shell (string-rtrim (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-
-(when (and (is-mac) window-system)
-  (set-exec-path-from-shell-PATH))
-
 ;;;; VISUAL APPEARANCE
 ;;   TODO the backgrounds are 256-color CONSOLE specific
-(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
 (set 'tab-width 2)
 (setq-default truncate-lines t)
 (set-face-foreground 'highlight nil) ;; always, this
@@ -75,7 +62,7 @@
    ("C-<left>  " er/contract-region)
    ;;; multiple cursors works well with expanded regions!
    ("M-<down>  " mc/mark-next-like-this)
-   ("M-<up>    " mc/mark-previous-like-this)x
+   ("M-<up>    " mc/mark-previous-like-this)
    ("M-@       " mc/mark-all-in-region) ;doubleplusgood
    ("C-c C-SPC " mc/mark-all-like-this)
    ("C-c C-a   " mc/edit-lines) ;region
@@ -93,7 +80,9 @@
     filename-pattern-list))
 
 (setq sgml-basic-offset 2)
+
 (require 'slim-mode) ;; package
+(set-mode-for-filename-patterns 'slim-mode '("\\.slim$" "\\.skim$"))
 (set-mode-for-filename-patterns 'ruby-mode
   '("\\.rb$" "\\.rsel$" "\\.rhtml$" "\\.erb$" "\\.prawn$" 
     "\\.rake" "Rakefile$" "Gemfile$" "Capfile$"))
@@ -103,14 +92,15 @@
 (require 'coffee-mode)
 (set-mode-for-filename-patterns 'coffee-mode '("\\.coffee" "Cakefile"))
 
+(require 'scss-mode)
+(setq scss-compile-at-save nil)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("1f392dc4316da3e648c6dc0f4aad1a87d4be556c" 
-                              "485737acc3bedc0318a567f1c0f5e7ed2dfde3fb" default))))
+ '(custom-safe-themes (quote ("1f392dc4316da3e648c6dc0f4aad1a87d4be556c" "485737acc3bedc0318a567f1c0f5e7ed2dfde3fb" default))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
